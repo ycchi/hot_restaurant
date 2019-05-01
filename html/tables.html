@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <title>Viewing All Tables</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1>🔥 Hot Restaurant - Tables</h1>
+      <a href="/" class="btn btn-lg btn-info">Go Back Home</a>
+      <a href="/add" class="btn btn-lg btn-danger">Add A Reservation</a>
+
+    </div>
+    <div class="row">
+      <!-- not on waiting list -->
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <h4 class="card-header">
+            Not Waiting
+          </h4>
+          <ul class="list-group list-group-flush" id="not-waiting">
+            <!-- tables NOT waiting will be listed here as <li> -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- on the waiting list -->
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <h4 class="card-header">
+            Waiting
+          </h4>
+          <ul class="list-group list-group-flush" id="waiting">
+            <!-- tables on waiting list will be printed here as <li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <script>
+    // perform GET request for all table data
+    $.ajax({
+        url: "/api/tables",
+        method: "GET"
+      })
+      .then(function (tableData) {
+        tableData.forEach(printTable);
+      });
+
+    function printTable(tableInfo) {
+      console.log(tableInfo);
+      // create a list item using jQuery
+      const $li = $("<li>").addClass("list-group-item");
+
+      // add content to <li>
+      $li.text(`ID: ${tableInfo.id} - ${tableInfo.name} || ${tableInfo.email} || ${tableInfo.phone}`);
+
+      // add <li> to page based on if it's on waiting list or not
+      if (tableInfo.isWaiting === false) {
+        // add them to left column
+        $("#not-waiting").append($li);
+      } else {
+        // add them to right column
+        $("#waiting").append($li);
+      }
+
+    }
+  </script>
+
+</body>
+
+</html>
